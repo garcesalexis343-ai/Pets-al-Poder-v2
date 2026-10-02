@@ -48,7 +48,7 @@
 
     <button id="anterior">❮</button>
 
-    <img src="imgprincipal.jpg" loading="lazy" alt="Imagen principal" id="anuel">
+    <img src="imgprincipal.jpeg" loading="lazy" alt="Imagen principal" id="anuel">
 
     <button id="siguiente">❯</button>
 
@@ -94,6 +94,13 @@
 
         <h2>Veterinarios Disponibles</h2>
 
+        <div class="veterinarios-controls">
+            <button type="button" id="buscar-veterinarias-cercanas" class="buscar-cercanas">
+                Buscar veterinarias cerca de mí
+            </button>
+            <p id="estado-geolocalizacion" role="status" aria-live="polite"></p>
+        </div>
+
         <div class="grid-veterinarios">
 
     <div class="card">
@@ -117,7 +124,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-locations='[{"label":"UMV","lat":10.395084931305663,"lng":-75.49039812883639}]'>
         <h3>UM V </h3>
         <img src="fotos_veterinarias/uvm,veterinarios.jpeg" alt="Veterinarios UVM" class="img_veterinarios" loading="lazy" >
         <p>UM V Profesionales Al Cuidado De Su Mascota S.A.S Hospital veterinario.</p>
@@ -154,7 +161,7 @@
     </div>
 
 
-    <div class="card">
+    <div class="card" data-locations='[{"label":"Huellas y Colas","lat":10.3891,"lng":-75.4789}]'>
         <h3>Huellas y colas</h3>
         <img src="fotos_veterinarias/huellasycolaslogo.jpeg" alt="veterianrios" class="img_veterinarios" loading="lazy" > 
         <p>Consultorio Veterinario       Huellas y Colas.
@@ -191,7 +198,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-locations='[{"label":"Sede Zona Norte","lat":10.4782,"lng":-75.4891},{"label":"Sede Bosque","lat":10.3955,"lng":-75.5123}]'>
         <h3>Lakma</h3>
         <img loading="lazy" src="fotos_veterinarias/lakmalogo.jpg" alt="" class="img_veterinarios">
         <p>Hospital veterinario.</p>
@@ -208,13 +215,13 @@
                     Instagram
                     •
                     @lakma_clinica_veterinaria
-                <a class="ubicacion-veterinarios" href="https://www.google.com/maps/search/?api=1&query=Calle+175+%2364-19+Bogota+Colombia&utm_source=">Ubicacion (Sede Zona Norte)</a>
+                <a class="ubicacion-veterinarios" href="https://www.google.com/maps/search/?api=1&query=DORAL+SUITES+Via+al+Mar+Cartagena">Ubicacion (Sede Zona Norte)</a>
 
-                <a class="ubicacion-veterinarios" href="https://www.google.com/maps/search/?api=1&query=LAKma+Clinica+Veterinaria+Sede+Bosque+Cartagena">Ubicacion (Sede Zona Norte)</a>
+                <a class="ubicacion-veterinarios" href="https://www.google.com/maps/search/?api=1&query=LAKma+Clinica+Veterinaria+El+Bosque+Cartagena">Ubicacion (Sede Bosque)</a>
             </p>
         </div>
     </div>
-    <div class="card">
+    <div class="card" data-locations='[{"label":"Nuevo Bosque","lat":10.3896,"lng":-75.5030}]'>
         <h3>MASCOCLINICA CLINICA VETERINARIA.</h3>
         <img loading="lazy" src="fotos_veterinarias/mascoclinicalogo.jpeg" alt="" class="img_veterinarios">
         <p>Hospital Veterinario</p>
@@ -233,7 +240,7 @@
             </p>
         </div>
     </div>
-    <div class="card">
+    <div class="card" data-locations='[{"label":"Los Alpes","lat":10.3942,"lng":-75.4809}]'>
         <h3>Centro Médico Veterinario Cartagena.</h3>
         <img loading="lazy" src="fotos_veterinarias/centroveterinario.jpeg" alt="" class="img_veterinarios">
         <p>Veterinario.</p>
@@ -254,7 +261,7 @@
             </p>
         </div>
     </div>
-    <div class="card">
+    <div class="card" data-locations='[{"label":"Manga","lat":10.4144,"lng":-75.5375}]'>
         <h3>Clínica Veterinaria Mascotas 24 Horas.</h3>
         <img loading="lazy" src="fotos_veterinarias/Clinica Veterinaria Mascotas 24 Horas logo.jpeg" alt="" class="img_veterinarios">
         <p>Veterinario.</p>
@@ -271,7 +278,7 @@
                 <a class="ubicacion-veterinarios" href="https://www.google.com/maps/search/?api=1&query=Clinica+Veterinaria+Mascotas+24+Horas+Manga+Cartagena">Ubicacion</a>
         </div>
     </div>
-     <div class="card">
+      <div class="card" data-locations='[{"label":"El Prado","lat":10.4081,"lng":-75.5086}]'>
         <h3>Centro veterinario el Prado</h3>
         <img loading="lazy" src="fotos_veterinarias/elpradologo2.jpeg" alt="" class="img_veterinarios">
         <p>Hospital veterinario.</p>
@@ -288,7 +295,7 @@
                     <a class="ubicacion-veterinarios" href="https://www.google.com/maps/search/?api=1&query=Centro+veterinario+el+Prado+Cartagena">Ubicacion</a>
         </div>
     </div>
-    <div class="card">
+    <div class="card" data-locations='[{"label":"Transversal 53","lat":10.3912,"lng":-75.5015}]'>
         <h3>Veterinaria Animal lover.</h3>
         <img loading="lazy" src="fotos_veterinarias/animalloverlogo.jpeg" alt="" class="img_veterinarios">
         <p>Hospital veterinario.</p>
@@ -305,7 +312,7 @@
                     <a class="ubicacion-veterinarios" href="https://www.google.com/maps/search/?api=1&query=Veterinaria+Animal+Lover+Transversal+53+Cartagena">Ubicacion</a>
         </div>
     </div>
-    <div class="card">
+    <div class="card" data-locations='[{"label":"La Plazuela","lat":10.3888,"lng":-75.4775}]'>
         <h3>Clinica veterinaria pet city.</h3>
         <img loading="lazy" src="fotos_veterinarias/petcity.jpeg" alt="" class="img_veterinarios">
         <p>Hospital veterinario.</p>

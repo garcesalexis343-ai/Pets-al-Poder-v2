@@ -266,6 +266,41 @@ nav a:hover{
     padding: 20px;
 }
 
+.veterinarios-controls{
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    margin: 18px 0;
+}
+
+.buscar-cercanas{
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--color-secundario);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.buscar-cercanas:disabled{
+    cursor: wait;
+    opacity: .7;
+}
+
+#estado-geolocalizacion{
+    min-height: 1.5em;
+    margin: 0;
+}
+
+.distancia-veterinaria{
+    padding: 8px 10px;
+    border-left: 3px solid var(--color-secundario);
+    background: #e8f2ed;
+    color: #173c2c;
+    font-weight: bold;
+}
+
 h2{
     margin: 0;
 }
