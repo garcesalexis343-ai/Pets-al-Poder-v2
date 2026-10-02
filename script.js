@@ -36,6 +36,101 @@ document.querySelectorAll(".vermas").forEach(boton => {
 
 });
 
+const veterinaryGrid = document.querySelector(".grid-veterinarios");
+const nearbyButton = document.getElementById("buscar-veterinarias-cercanas");
+const geolocationStatus = document.getElementById("estado-geolocalizacion");
+
+if (veterinaryGrid && nearbyButton && geolocationStatus) {
+    const veterinaryCards = Array.from(veterinaryGrid.querySelectorAll(".card"));
+    const originalCardOrder = [...veterinaryCards];
+    const buttonLabel = nearbyButton.textContent.trim();
+
+    function distanceInKm(origin, destination) {
+        const radians = degrees => degrees * Math.PI / 180;
+        const latitudeDifference = radians(destination.lat - origin.lat);
+        const longitudeDifference = radians(destination.lng - origin.lng);
+        const originLatitude = radians(origin.lat);
+        const destinationLatitude = radians(destination.lat);
+        const haversine = Math.sin(latitudeDifference / 2) ** 2
+            + Math.cos(originLatitude) * Math.cos(destinationLatitude)
+            * Math.sin(longitudeDifference / 2) ** 2;
+
+        return 6371 * 2 * Math.atan2(
+            Math.sqrt(haversine),
+            Math.sqrt(1 - haversine)
+        );
+    }
+
+    function resetNearbyResults() {
+        veterinaryCards.forEach(card => {
+            card.querySelector(".distancia-veterinaria")?.remove();
+            veterinaryGrid.append(card);
+        });
+    }
+
+    nearbyButton.addEventListener("click", () => {
+        if (!window.isSecureContext || !navigator.geolocation) {
+            geolocationStatus.textContent = "La ubicación requiere HTTPS o abrir el sitio en localhost.";
+            return;
+        }
+
+        nearbyButton.disabled = true;
+        nearbyButton.textContent = "Buscando ubicación...";
+        geolocationStatus.textContent = "El navegador te pedirá permiso para usar tu ubicación.";
+
+        navigator.geolocation.getCurrentPosition(position => {
+            const userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            const rankedCards = veterinaryCards.map((card, index) => {
+                const locations = JSON.parse(card.dataset.locations || "[]");
+                const nearestLocation = locations
+                    .map(location => ({
+                        ...location,
+                        distance: distanceInKm(userLocation, location)
+                    }))
+                    .sort((first, second) => first.distance - second.distance)[0];
+
+                return { card, index, nearestLocation };
+            }).sort((first, second) => {
+                const firstDistance = first.nearestLocation?.distance ?? Infinity;
+                const secondDistance = second.nearestLocation?.distance ?? Infinity;
+                return firstDistance - secondDistance || first.index - second.index;
+            });
+
+            rankedCards.forEach(({ card, nearestLocation }) => {
+                card.querySelector(".distancia-veterinaria")?.remove();
+
+                const distanceLabel = document.createElement("p");
+                distanceLabel.className = "distancia-veterinaria";
+                distanceLabel.textContent = nearestLocation
+                    ? `${new Intl.NumberFormat("es-CO", { maximumFractionDigits: 1 }).format(nearestLocation.distance)} km en línea recta · ${nearestLocation.label}`
+                    : "Distancia no disponible";
+                card.querySelector("h3")?.after(distanceLabel);
+                veterinaryGrid.append(card);
+            });
+
+            geolocationStatus.textContent = "Veterinarias ordenadas por cercanía. La distancia es en línea recta y puede diferir de la ruta.";
+            nearbyButton.disabled = false;
+            nearbyButton.textContent = buttonLabel;
+        }, error => {
+            resetNearbyResults();
+            geolocationStatus.textContent = error.code === error.PERMISSION_DENIED
+                ? "No se concedió el permiso. Puedes seguir explorando la lista completa."
+                : error.code === error.TIMEOUT
+                    ? "La ubicación tardó demasiado en obtenerse. Inténtalo de nuevo."
+                    : "No pudimos determinar tu ubicación. Puedes seguir explorando la lista completa.";
+            nearbyButton.disabled = false;
+            nearbyButton.textContent = buttonLabel;
+        }, {
+            enableHighAccuracy: false,
+            timeout: 12000,
+            maximumAge: 300000
+        });
+    });
+}
+
 
 
 
