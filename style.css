@@ -442,3 +442,9 @@ section{
 #siguiente{
     right: 20px;
 }
+
+.btn_carita{
+    background-color: #0f0f0f;
+    color: white;
+    border-radius: 7px;
+}

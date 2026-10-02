@@ -208,6 +208,34 @@ body{
     transform: scale(.97);
 }
 
+.btn_register{
+     width: 100%;
+
+    margin-top: 20px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #2d6a4f;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+    text-align: center;
+
+    text-decoration: none;
+}
+
 /* =================== BOTON TRANSPARENTE =================== */
 
 .container button.hidden{
