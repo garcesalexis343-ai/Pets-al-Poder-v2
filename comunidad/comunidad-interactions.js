@@ -139,7 +139,7 @@ function addLikeButton(card, { sample = false, likes = [] } = {}) {
     const likeButton = document.createElement("button");
     likeButton.type = "button";
     likeButton.className = "like-button";
-    likeButton.innerHTML = '<i data-lucide="heart"></i><span class="like-count"></span>';
+    likeButton.innerHTML = '<i data-lucide="heart"></i><span class="like-label">Me gusta</span>';
     actions.prepend(likeButton);
 
     const sampleKey = `entre-huellas:likes:${card.dataset.sampleId}`;
@@ -152,7 +152,7 @@ function addLikeButton(card, { sample = false, likes = [] } = {}) {
         likeButton.classList.toggle("is-liked", liked);
         likeButton.setAttribute("aria-pressed", String(liked));
         likeButton.setAttribute("aria-label", liked ? "Quitar me gusta" : "Me gusta");
-        likeButton.querySelector(".like-count").textContent = String(sample ? (Number(card.dataset.likes || 0) + Number(liked)) : currentLikes.length);
+        likeButton.querySelector(".like-label").textContent = liked ? "Te gusta" : "Me gusta";
     }
 
     likeButton.addEventListener("click", async () => {
@@ -386,7 +386,6 @@ function renderCase(id, data) {
         <p class="post-body">${escapeHTML(data.descripcion || "")}</p>
         ${data.imagen ? `<img class="post-image" src="${escapeHTML(data.imagen)}" alt="Foto adjunta al caso" loading="lazy">` : ""}
         <div class="case-footer">
-            <span class="help-count"><i data-lucide="heart"></i> ${likes.length} personas ya ayudaron</span>
             <div class="case-actions">
                 <button class="text-action" type="button"><i data-lucide="lightbulb"></i> A mí me funcionó esto</button>
                 <button class="professional-action" type="button"><i data-lucide="badge-check"></i> Soy profesional</button>

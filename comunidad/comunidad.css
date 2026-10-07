@@ -476,14 +476,12 @@ button{color:inherit}
 .post-title{margin:0;color:#35362f;font-size:15px;line-height:1.45;font-weight:750}
 .post-body{margin:0;color:#696a63;font-size:12px;line-height:1.7;white-space:pre-line}
 .case-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:17px;padding-top:13px;border-top:1px solid #f2eee8}
-.help-count{display:inline-flex;align-items:center;gap:6px;color:#828078;font-size:10px;white-space:nowrap}
-.help-count svg{width:14px;height:14px;color:#ce8061}
 .case-actions{display:flex;align-items:center;gap:12px}
 .text-action,.professional-action{display:inline-flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:#a45e3d;font-size:10px;font-weight:700;cursor:pointer}
 .professional-action{color:#607b64}
 .text-action svg,.professional-action svg{width:14px;height:14px}
 .text-action:hover,.professional-action:hover{text-decoration:underline}
-.like-button{min-width:40px;height:32px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 9px;border:1px solid #f0e4dc;border-radius:999px;background:#fffaf6;color:#a56a52;font-size:11px;font-weight:700;cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease}
+.like-button{min-height:32px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 10px;border:1px solid #f0e4dc;border-radius:999px;background:#fffaf6;color:#a56a52;font-size:10px;font-weight:700;cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease}
 .like-button svg{width:15px;height:15px}
 .like-button:hover,.like-button.is-liked{border-color:#e8b8aa;background:#fff0ed;color:#c75c58}
 .like-button.is-liked svg{fill:#c75c58}
@@ -599,7 +597,7 @@ a.comment-profile-avatar:hover,a.comment-profile-avatar:focus-visible{outline:2p
     .case-footer{gap:12px;margin-top:14px}
     .case-actions{width:100%;justify-content:space-between;gap:9px}
     .text-action,.professional-action{font-size:9px}
-    .like-button{height:30px;min-width:37px}
+    .like-button{min-height:30px}
     .sidebar{position:static;width:100%;padding:18px}
     .profile-description{max-height:180px;font-size:12px}
     .community-rules{grid-template-columns:1fr;gap:0}
