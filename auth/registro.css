@@ -76,6 +76,16 @@ body{
     cursor: pointer;
 }
 
+.registration-message{
+    max-width:100%;
+    color:#a33737;
+    text-align:center;
+}
+
+.registration-message[data-type="success"]{color:#315f32}
+.registration-message[hidden]{display:none}
+.container button:disabled{cursor:wait;opacity:.7}
+
 .container button.hidden {
     background-color: transparent;
     border-color: #eee;

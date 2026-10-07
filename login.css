@@ -127,6 +127,16 @@ body{
     text-align: center;
 }
 
+.container .auth-error{
+    width:100%;
+    margin:0 0 8px;
+    color:#a33737;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.container .auth-error[hidden]{display:none}
+
 .container span{
 
     font-size: 13px;

@@ -1,61 +1,32 @@
 import { auth } from "../firebase-config.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import {
-    signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const loginForm = document.getElementById("loginForm");
+const loginButton = document.getElementById("loginBtn");
+const errorMessage = document.getElementById("loginError");
 
+loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    errorMessage.hidden = true;
+    loginButton.disabled = true;
+    loginButton.textContent = "Ingresando...";
 
-
-
-
-
-const btn = document.getElementById("loginBtn");
-document.addEventListener("keydown",(e)=>{
-    if(e.key === "Enter"){
-        btn.click()
-    }
-})
-
-
-btn.addEventListener("click", async () => {
-
-    const correo = document.getElementById("correo").value;
-    const password = document.getElementById("password").value; 
+    const correo = document.getElementById("correo").value.trim();
+    const password = document.getElementById("password").value;
 
     try {
-
-        const userCredential = await signInWithEmailAndPassword(auth, correo, password);
-
-        // recargar perfil por si displayName no estaba actualizado y usarlo en la ventana modal
-        await userCredential.user.reload();
-        const displayName = userCredential.user.displayName || correo;
-        document.querySelector(".h2").textContent = `Bienvenido ${displayName} a peats al poder `
-        document.querySelector(".card-modal").style.display = "flex"
-        
-        const cerrar = document.getElementById("cerrarModal")
-       document.addEventListener("keydown",(e)=>{
-    if(e.key === "Enter"){
-         cerrar.click()
-        }
-    })
-        cerrar.addEventListener("click", () =>{
-            cerraModal()
-        })
-
-
+        await signInWithEmailAndPassword(auth, correo, password);
+        window.location.replace("inicio.html");
     } catch (error) {
-
-        alert("Error: " + error.message);
-
+        const messages = {
+            "auth/invalid-credential": "El correo o la contraseña no son correctos.",
+            "auth/invalid-email": "Escribe un correo válido.",
+            "auth/too-many-requests": "Hubo varios intentos. Espera un momento y prueba de nuevo.",
+            "auth/network-request-failed": "No se pudo conectar. Revisa tu conexión a internet."
+        };
+        errorMessage.textContent = messages[error.code] || "No se pudo iniciar sesión. Revisa tus datos e inténtalo de nuevo.";
+        errorMessage.hidden = false;
+        loginButton.disabled = false;
+        loginButton.textContent = "Entrar";
     }
-
 });
-
-
-
-
-        function cerraModal(){
-            document.querySelector(".card-modal").style.display = "none"
-        window.location.href = "../inicio.html";
-
-        }

@@ -4,29 +4,39 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="comunidad.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi Perfil - Comunidad</title>
+<title>Perfil | Pets al Poder</title>
 </head>
-<body>
+<body class="profile-page">
 <div id="site-loader" class="site-loader" style="display:flex">
     <div class="spinner"></div>
 </div>
 
-<header>
-    <h1>Mi Perfil</h1>
-    <a href="../inicio.html">Regresar</a>
+<header class="profile-header">
+    <h1 id="perfil-titulo">Mi Perfil</h1>
+    <a class="profile-back" href="../inicio.html">Regresar</a>
 </header>
 
-<main class="container-comunidad">
+<main class="container-comunidad profile-layout">
     <section class="feed" id="mis-publicaciones">
         <div id="sin-publicaciones">
             <h2>No tienes publicaciones aún</h2>
         </div>
     </section>
 
-    <aside class="sidebar">
-        <h3>Tu información</h3>
-        <div id="perfil-info"></div>
-        <p id="perfil-description" style="margin-top:12px;color:#374151;line-height:1.5;"></p>
+    <aside class="sidebar profile-sidebar">
+        <h2>Tu información</h2>
+        <div id="perfil-info" class="profile-info"></div>
+        <h3 class="profile-about-title">Sobre mí</h3>
+        <p id="perfil-description" class="profile-description"></p>
+        <button id="editar-descripcion" class="profile-edit-button" type="button" hidden>Añadir descripción</button>
+        <div id="editor-descripcion" class="profile-description-editor" hidden>
+            <label for="texto-descripcion">Tu descripción</label>
+            <textarea id="texto-descripcion" maxlength="500" placeholder="Cuéntales a los demás un poco sobre ti"></textarea>
+            <div class="profile-description-actions">
+                <button id="cancelar-descripcion" class="profile-cancel-button" type="button">Cancelar</button>
+                <button id="guardar-descripcion" class="profile-save-button" type="button">Guardar</button>
+            </div>
+        </div>
     </aside>
 </main>
 

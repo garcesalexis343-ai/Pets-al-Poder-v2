@@ -14,23 +14,18 @@
     <div id="site-loader" class="site-loader" style="display:flex">
         <div class="spinner"></div>
     </div>
-<div class="card-modal">
-    <h2 class="h2"></h2>
-    <p>que gran gusto tenerlo aqui con peats al poder <br> esperamos seguir encontrandolo aqui </p>
-    <button id="cerrarModal" onclick="cerrarModal()">Cerar modal</button>
-</div>
-    
 <div class="container">
-    <form>
+    <form id="loginForm">
         <h1>Iniciar Sesión🐾</h1>
         <p>Utiliza su correo para Iniciar Sesión<p></p>
-        <input id="correo" type="email" placeholder="Correo">
+        <input id="correo" type="email" placeholder="Correo" autocomplete="email" required>
         <br><br>
         <p>Utiliza su contraseña para Iniciar Sesión<p></p>
-        <input id="password" type="password" placeholder="Contraseña">
+        <input id="password" type="password" placeholder="Contraseña" autocomplete="current-password" required>
         <br><br>
 
-        <button id="loginBtn" type="button">Entrar</button>
+        <p id="loginError" class="auth-error" role="alert" hidden></p>
+        <button id="loginBtn" type="submit">Entrar</button>
         <br>
         <a class="btn_register" href="auth/registro.html">registrarte</a>
 
@@ -38,7 +33,7 @@
     </form>
 </div>
 
-<script type="module" src="/auth/login.js"></script>
+<script type="module" src="auth/login.js"></script>
 
 <script>
     (function(){
@@ -59,7 +54,6 @@
                 setTimeout(()=> window.location.href = href, 120);
             });
         });
-        document.querySelectorAll('form').forEach(f=> f.addEventListener('submit', ()=> show()));
     })();
 </script>
 

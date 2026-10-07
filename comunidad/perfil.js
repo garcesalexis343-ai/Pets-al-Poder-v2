@@ -1,5 +1,5 @@
 import { auth, db } from "../firebase-config.js";
-import { collection, query, where, getDocs, orderBy, doc, getDoc, addDoc, Timestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { collection, query, where, getDocs, doc, getDoc, addDoc, Timestamp, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const CLOUD_NAME = "djzjn0e54";
 const UPLOAD_PRESET = "pets_poder";
@@ -11,9 +11,85 @@ const abrir = document.getElementById("abrirModal");
 const cerrar = document.getElementById("cerrarModal");
 const publicar = document.getElementById("publicar");
 const loader = document.getElementById('site-loader');
+const descripcionEl = document.getElementById('perfil-description');
+const editarDescripcion = document.getElementById('editar-descripcion');
+const editorDescripcion = document.getElementById('editor-descripcion');
+const textoDescripcion = document.getElementById('texto-descripcion');
+const guardarDescripcion = document.getElementById('guardar-descripcion');
+const cancelarDescripcion = document.getElementById('cancelar-descripcion');
+let perfilPropioUid = null;
 
 const params = new URLSearchParams(window.location.search);
 const uidParam = params.get('uid');
+
+function fechaEnMilisegundos(value) {
+    if (typeof value === 'number') return value;
+    if (value && typeof value.toMillis === 'function') return value.toMillis();
+    if (value && typeof value.seconds === 'number') return value.seconds * 1000;
+    const parsed = Date.parse(value || '');
+    return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function escaparHTML(value = '') {
+    return String(value).replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[character]);
+}
+
+function urlImagenSegura(value) {
+    try {
+        const url = new URL(value);
+        return url.protocol === 'https:' ? url.href : '';
+    } catch {
+        return '';
+    }
+}
+
+function mostrarDescripcion(descripcion = '') {
+    descripcionEl.textContent = descripcion;
+    editarDescripcion.textContent = descripcion.trim() ? 'Modificar descripción' : 'Añadir descripción';
+}
+
+editarDescripcion.addEventListener('click', () => {
+    textoDescripcion.value = descripcionEl.textContent || '';
+    editorDescripcion.hidden = false;
+    editarDescripcion.hidden = true;
+    textoDescripcion.focus();
+});
+
+cancelarDescripcion.addEventListener('click', () => {
+    editorDescripcion.hidden = true;
+    editarDescripcion.hidden = !perfilPropioUid;
+});
+
+guardarDescripcion.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user || !perfilPropioUid || user.uid !== perfilPropioUid) {
+        mostrarNotificacion('Inicia sesión con tu cuenta para editar esta descripción', 'error');
+        return;
+    }
+
+    guardarDescripcion.disabled = true;
+    guardarDescripcion.textContent = 'Guardando...';
+    try {
+        const descripcion = textoDescripcion.value.trim();
+        await setDoc(doc(db, 'usuarios', perfilPropioUid), { descripcion }, { merge: true });
+        mostrarDescripcion(descripcion);
+        editorDescripcion.hidden = true;
+        editarDescripcion.hidden = false;
+        mostrarNotificacion('Descripción actualizada', 'success');
+    } catch (error) {
+        console.error('Error guardando la descripción:', error);
+        mostrarNotificacion('No se pudo guardar. Revisa los permisos de Firestore e inténtalo de nuevo.', 'error');
+    } finally {
+        guardarDescripcion.disabled = false;
+        guardarDescripcion.textContent = 'Guardar';
+    }
+});
 
 // Mostrar spinner al inicio
 if(loader) loader.style.display = 'flex';
@@ -130,7 +206,7 @@ function ocultarSpinner() {
     if(loader) loader.style.display = 'none';
 }
 
-async function loadProfileByUid(uid){
+async function loadProfileByUid(uid, isOwner = false){
     try {
         console.log('Cargando perfil público para uid:', uid);
         const userDocRef = doc(db, 'usuarios', uid);
@@ -141,23 +217,22 @@ async function loadProfileByUid(uid){
         const displayName = profileData?.displayName || 'Perfil';
         const photoURL = profileData?.photoURL || null;
         const descripcion = profileData?.descripcion || '';
+        perfilPropioUid = isOwner ? uid : null;
+        editarDescripcion.hidden = !perfilPropioUid;
+        mostrarDescripcion(descripcion);
+        const pageTitle = document.getElementById('perfil-titulo');
+        if(pageTitle) pageTitle.textContent = isOwner ? 'Mi Perfil' : `Perfil de ${displayName}`;
         
         console.log('Cargando perfil con displayName:', displayName, 'photoURL:', photoURL);
 
         // Mostrar el perfil primero
+        const safePhotoURL = urlImagenSegura(photoURL);
         perfilInfo.innerHTML = `
-            <div style="display:flex;gap:12px;align-items:center">
-                ${photoURL ? `<img src="${photoURL}" style="width:64px;height:64px;border-radius:50%">` : `<div style="width:64px;height:64px;border-radius:50%;background:#cfcfcf;display:flex;align-items:center;justify-content:center;font-weight:700">${(displayName||'U').charAt(0)}</div>`}
-                <div>
-                    <strong>${displayName}</strong>
-                </div>
+            <div class="profile-identity">
+                ${safePhotoURL ? `<img src="${escaparHTML(safePhotoURL)}" class="profile-avatar" alt="Foto de ${escaparHTML(displayName)}">` : `<div class="profile-avatar profile-avatar-placeholder" aria-hidden="true">${escaparHTML((displayName || 'U').charAt(0))}</div>`}
+                <div class="profile-user-text"><strong>${escaparHTML(displayName)}</strong></div>
             </div>
         `;
-        const descEl = document.getElementById('perfil-description');
-        if(descEl){
-            descEl.textContent = descripcion;
-        }
-
         // Intentar cargar publicaciones sin orderBy (no requiere índice)
         try {
             console.log('Cargando publicaciones para uid:', uid);
@@ -175,23 +250,25 @@ async function loadProfileByUid(uid){
 
             // Ordenar por fecha en el cliente
             const posts = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
-            posts.sort((a, b) => (b.fechaCreacion || 0) - (a.fechaCreacion || 0));
+            posts.sort((a, b) => fechaEnMilisegundos(b.fechaCreacion) - fechaEnMilisegundos(a.fechaCreacion));
 
             posts.forEach(d => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                const canDelete = auth.currentUser && auth.currentUser.uid === uid;
+                const canDelete = isOwner;
+                const postPhotoURL = urlImagenSegura(d.imagen);
+                const authorPhotoURL = urlImagenSegura(d.usuarioFoto);
                 card.innerHTML = `
                     <div class="post-header">
-                        ${d.usuarioFoto ? `<img src="${d.usuarioFoto}" class="avatar">` : `<div class="avatar">${(d.usuario||'U').charAt(0)}</div>`}
+                        ${authorPhotoURL ? `<img src="${escaparHTML(authorPhotoURL)}" class="avatar" alt="">` : `<div class="avatar">${escaparHTML((d.usuario||'U').charAt(0))}</div>`}
                         <div class="post-meta">
-                            <h3 class="post-title">${d.titulo}</h3>
-                            <div class="post-sub">${d.fecha}</div>
+                            <h3 class="post-title">${escaparHTML(d.titulo)}</h3>
+                            <div class="post-sub">${escaparHTML(d.fecha || '')}</div>
                             ${canDelete ? `<div class="post-controls" style="margin-top:6px"><button class="delete-post" style="background:#e74c3c;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:bold;">🗑️ Borrar</button></div>` : ''}
                         </div>
                     </div>
-                    ${d.imagen ? `<img src="${d.imagen}" class="post-image">` : ''}
-                    <div class="post-body">${d.descripcion}</div>
+                    ${postPhotoURL ? `<img src="${escaparHTML(postPhotoURL)}" class="post-image" alt="Foto adjunta a la publicación" loading="lazy">` : ''}
+                    <div class="post-body">${escaparHTML(d.descripcion || '')}</div>
                 `;
                 feed.appendChild(card);
                 
@@ -323,11 +400,11 @@ if(uidParam){
             console.log('Es perfil ajeno, ocultando botón');
             if(abrir) abrir.style.display = 'none';
         }
-    });
-    
-    loadProfileByUid(uidParam).catch(err => {
-        console.error('Error en loadProfileByUid:', err);
-        ocultarSpinner();
+
+        loadProfileByUid(uidParam, Boolean(user && user.uid === uidParam)).catch(err => {
+            console.error('Error en loadProfileByUid:', err);
+            ocultarSpinner();
+        });
     });
 } else {
     // Perfil propio (sin uid en URL) - NO tocar el display del botón, ya está visible
@@ -351,25 +428,24 @@ if(uidParam){
             const displayName = profileData?.displayName || user.displayName || user.email;
             const photoURL = profileData?.photoURL || user.photoURL || null;
             const descripcion = profileData?.descripcion || '';
+            perfilPropioUid = user.uid;
+            editarDescripcion.hidden = false;
+            mostrarDescripcion(descripcion);
             
             console.log('Usando displayName:', displayName, 'photoURL:', photoURL);
 
+            const safePhotoURL = urlImagenSegura(photoURL);
             perfilInfo.innerHTML = `
-                <div style="display:flex;gap:12px;align-items:center">
-                    ${photoURL ? `<img src="${photoURL}" style="width:64px;height:64px;border-radius:50%">` : `<div style="width:64px;height:64px;border-radius:50%;background:#cfcfcf;display:flex;align-items:center;justify-content:center;font-weight:700">${(displayName||'U').charAt(0)}</div>`}
-                    <div>
-                        <strong>${displayName}</strong>
-                        <div style="font-size:0.9rem;color:#6b7280">${user.email}</div>
+                <div class="profile-identity">
+                    ${safePhotoURL ? `<img src="${escaparHTML(safePhotoURL)}" class="profile-avatar" alt="Foto de ${escaparHTML(displayName)}">` : `<div class="profile-avatar profile-avatar-placeholder" aria-hidden="true">${escaparHTML((displayName || 'U').charAt(0))}</div>`}
+                    <div class="profile-user-text">
+                        <strong>${escaparHTML(displayName)}</strong>
+                        <div class="profile-email">${escaparHTML(user.email || '')}</div>
                     </div>
                 </div>
             `;
-            const descEl = document.getElementById('perfil-description');
-            if(descEl){
-                descEl.textContent = descripcion;
-            }
-
             // cargar publicaciones del usuario
-            const q = query(collection(db, 'publicaciones'), where('usuarioId', '==', user.uid), orderBy('fechaCreacion', 'desc'));
+            const q = query(collection(db, 'publicaciones'), where('usuarioId', '==', user.uid));
             const snapshot = await getDocs(q);
             feed.innerHTML = '';
             if(snapshot.empty){
@@ -378,22 +454,25 @@ if(uidParam){
                 return;
             }
 
-            snapshot.forEach(docRef => {
+            const posts = snapshot.docs.slice().sort((a, b) => fechaEnMilisegundos(b.data().fechaCreacion) - fechaEnMilisegundos(a.data().fechaCreacion));
+            posts.forEach(docRef => {
                 const d = docRef.data();
                 console.log('Renderizando publicación:', d.titulo, 'id:', docRef.id);
                 const card = document.createElement('div');
                 card.className = 'card';
+                const postPhotoURL = urlImagenSegura(d.imagen);
+                const authorPhotoURL = urlImagenSegura(d.usuarioFoto);
                 card.innerHTML = `
                     <div class="post-header">
-                        ${d.usuarioFoto ? `<img src="${d.usuarioFoto}" class="avatar">` : `<div class="avatar">${(d.usuario||'U').charAt(0)}</div>`}
+                        ${authorPhotoURL ? `<img src="${escaparHTML(authorPhotoURL)}" class="avatar" alt="">` : `<div class="avatar">${escaparHTML((d.usuario||'U').charAt(0))}</div>`}
                         <div class="post-meta">
-                            <h3 class="post-title">${d.titulo}</h3>
-                            <div class="post-sub">${d.fecha}</div>
+                            <h3 class="post-title">${escaparHTML(d.titulo)}</h3>
+                            <div class="post-sub">${escaparHTML(d.fecha || '')}</div>
                             <div class="post-controls" style="margin-top:6px"><button class="delete-post" style="background:#e74c3c;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:bold;">🗑️ Borrar</button></div>
                         </div>
                     </div>
-                    ${d.imagen ? `<img src="${d.imagen}" class="post-image">` : ''}
-                    <div class="post-body">${d.descripcion}</div>
+                    ${postPhotoURL ? `<img src="${escaparHTML(postPhotoURL)}" class="post-image" alt="Foto adjunta a la publicación" loading="lazy">` : ''}
+                    <div class="post-body">${escaparHTML(d.descripcion || '')}</div>
                 `;
                 feed.appendChild(card);
 

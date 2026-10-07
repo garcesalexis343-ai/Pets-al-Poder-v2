@@ -15,6 +15,25 @@ const CLOUD_NAME = "djzjn0e54";
 const UPLOAD_PRESET = "pets_poder";
 
 const btn = document.getElementById("registrar");
+const form = document.querySelector(".container form");
+const message = document.getElementById("registroMensaje");
+
+function showMessage(text, type = "error") {
+    message.textContent = text;
+    message.dataset.type = type;
+    message.hidden = false;
+}
+
+function registrationError(error) {
+    const messages = {
+        "auth/email-already-in-use": "Ya existe una cuenta con ese correo. Ve a Iniciar sesión.",
+        "auth/invalid-email": "Escribe un correo válido.",
+        "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+        "auth/operation-not-allowed": "El registro por correo no está habilitado en Firebase Authentication.",
+        "auth/network-request-failed": "No se pudo conectar. Revisa tu conexión e inténtalo de nuevo."
+    };
+    return messages[error.code] || "No se pudo crear la cuenta. Revisa los datos e inténtalo de nuevo.";
+}
 
 async function subirACloudinary(archivo){
     if(!archivo) return null;
@@ -30,34 +49,35 @@ async function subirACloudinary(archivo){
 }
 
 btn.addEventListener("click", async () => {
+    if (btn.disabled || !form.reportValidity()) return;
 
-    const nombre = document.getElementById("nombre").value;
-
-    const correo = document.getElementById("correo").value;
-
+    const nombre = document.getElementById("nombre").value.trim();
+    const correo = document.getElementById("correo").value.trim();
     const password = document.getElementById("password").value;
-
-    const fotoArchivo = document.getElementById('fotoPerfil').files[0];
-    const descripcionPerfil = document.getElementById('descripcionPerfil').value.trim();
+    const fotoArchivo = document.getElementById("fotoPerfil").files[0];
+    const descripcionPerfil = document.getElementById("descripcionPerfil").value.trim();
+    const labelOriginal = btn.textContent;
+    message.hidden = true;
+    btn.disabled = true;
+    btn.textContent = "Creando cuenta...";
 
     try {
-
         const usuario = await createUserWithEmailAndPassword(auth, correo, password);
 
         let photoURL = null;
-        if(fotoArchivo){
-            try{
-                console.log('Subiendo foto a Cloudinary...');
+        if (fotoArchivo) {
+            try {
                 photoURL = await subirACloudinary(fotoArchivo);
-                console.log('Foto subida exitosamente:', photoURL);
-            }catch(e){
-                console.error('Error subiendo foto de perfil:', e);
+            } catch (error) {
+                console.error("Error subiendo foto de perfil:", error);
             }
         }
 
-        console.log('Actualizando perfil con displayName:', nombre, 'photoURL:', photoURL);
-        await updateProfile(usuario.user, { displayName: nombre, photoURL: photoURL });
-        console.log('Perfil actualizado en Auth');
+        try {
+            await updateProfile(usuario.user, { displayName: nombre, photoURL });
+        } catch (error) {
+            console.warn("La cuenta se creó, pero no se pudo actualizar el perfil de Auth:", error);
+        }
 
         try {
             await setDoc(doc(db, 'usuarios', usuario.user.uid), {
@@ -68,20 +88,16 @@ btn.addEventListener("click", async () => {
                 descripcion: descripcionPerfil || '',
                 createdAt: Date.now()
             });
-        } catch(firestoreError) {
-            console.warn('Error guardando en Firestore:', firestoreError);
-            // Continuar aunque falle Firestore, la cuenta se creó correctamente
+        } catch (firestoreError) {
+            console.warn("La cuenta se creó, pero no se guardó el perfil en Firestore:", firestoreError);
         }
 
-        alert("Cuenta creada correctamente");
-
-        window.location.href = "../index.html";
-
+        showMessage("Cuenta creada correctamente. Te llevamos al inicio de sesión...", "success");
+        window.setTimeout(() => window.location.replace("../index.html"), 900);
+    } catch (error) {
+        console.error("Error creando la cuenta:", error);
+        showMessage(registrationError(error));
+        btn.disabled = false;
+        btn.textContent = labelOriginal;
     }
-    catch(error){
-
-        alert(error.message);
-
-    }
-
 });

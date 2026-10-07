@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="comunidad.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comunidad Pets al Poder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<title>Entre Huellas | Comunidad Pets al Poder</title>
 
 </head>
 <body>
@@ -14,63 +18,140 @@
     <div class="spinner"></div>
 </div>
 
-<header>
-    <h1>🐾 Comunidad Pets al Poder</h1>
-    <a href="../inicio.html">Regresar</a>
+<header class="topbar">
+    <a class="brand" href="../inicio.html" aria-label="Pets al Poder, volver al inicio">
+        <span class="brand-mark"><i data-lucide="paw-print"></i></span>
+        <span>Pets al Poder</span>
+    </a>
+    <a class="back-link" href="../inicio.html"><i data-lucide="arrow-left"></i><span>Volver</span></a>
 </header>
-<div class="container-comunidad">
-    <main class="feed" id="contenedor-publicaciones">
 
-        <div id="sin-publicaciones">
-            <h2>No hay publicaciones</h2>
-            <span>🐾</span>
+<main class="community-shell">
+    <section class="community-hero" aria-labelledby="community-title">
+        <div class="hero-copy">
+            <p class="eyebrow"><span></span> Un espacio para acompañarnos</p>
+            <h1 id="community-title">Entre Huellas</h1>
+            <p class="hero-subtitle">Aquí nadie juzga. Todos estamos aprendiendo a cuidar.</p>
+            <button class="primary-button hero-button" id="abrirModal" type="button">
+                <i data-lucide="heart-handshake"></i>
+                <span>Contar mi caso de forma anónima</span>
+            </button>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+            <span class="hero-sun"></span>
+            <i data-lucide="paw-print"></i>
+            <span class="hero-note">Aquí cabemos<br>todos 🧡</span>
+        </div>
+    </section>
+
+    <section class="community-content" aria-label="Casos de la comunidad">
+        <div class="feed-heading">
+            <div>
+                <p class="eyebrow">Nos ayudamos entre todos</p>
+                <h2>Casos que nos unen</h2>
+            </div>
+            <span class="case-count"><i data-lucide="messages-square"></i> Un paso a la vez</span>
         </div>
 
-    </main>
+        <nav class="filters" aria-label="Filtrar casos por categoría">
+            <button class="filter-button is-active" type="button" data-filter="todos" aria-pressed="true">Todos</button>
+            <button class="filter-button" type="button" data-filter="casa" aria-pressed="false">Conducta en casa</button>
+            <button class="filter-button" type="button" data-filter="ansiedad" aria-pressed="false">Miedo y ansiedad</button>
+            <button class="filter-button" type="button" data-filter="urgente" aria-pressed="false">Necesito ayuda urgente</button>
+        </nav>
 
-    <aside class="sidebar">
-        <h3>Reglas rápidas</h3>
-        <p>Comparte información útil. Respeta a los demás usuarios.</p>
-        <hr>
-        <h4>Atajos</h4>
-        <p>Pulsa <strong>+</strong> para crear una publicación.</p>
-    </aside>
+        <div class="container-comunidad">
+            <section class="feed" id="contenedor-publicaciones" aria-live="polite">
+                <div id="sin-publicaciones" hidden>
+                    <h2>No hay publicaciones todavía</h2>
+                    <span>🐾</span>
+                </div>
 
-</div>
+                <article class="card sample-card" data-category="casa" data-sample-id="cachorro-noche">
+                    <div class="case-topline"><span class="category-tag"><i data-lucide="home"></i> Conducta en casa</span><span class="case-status status-open"><span></span> Abierto</span></div>
+                    <div class="case-heading"><span class="dog-icon"><i data-lucide="dog"></i></span><div><p class="post-sub">Cachorro · Hace 2 horas</p><h3 class="post-title">Mi cachorro se hace popó todas las noches</h3></div></div>
+                    <p class="post-body">Tiene 4 meses y durante el día va aprendiendo, pero en la noche todavía hay accidentes. Estoy intentando sacarlo justo antes de dormir.</p>
+                    <div class="case-footer"><span class="help-count"><i data-lucide="heart"></i> 3 personas ya ayudaron</span><div class="case-actions"><button class="text-action" type="button"><i data-lucide="lightbulb"></i> A mí me funcionó esto</button><button class="professional-action" type="button"><i data-lucide="badge-check"></i> Soy profesional</button></div></div>
+                </article>
 
-<button class="flotante" id="abrirModal">+</button>
+                <article class="card sample-card" data-category="ansiedad" data-sample-id="luna-separacion">
+                    <div class="case-topline"><span class="category-tag tag-anxiety"><i data-lucide="heart-pulse"></i> Miedo y ansiedad</span><span class="case-status status-help"><span></span> Recibiendo ayuda</span></div>
+                    <div class="case-heading"><span class="dog-icon dog-icon-peach"><i data-lucide="dog"></i></span><div><p class="post-sub">Rescatada · Hace 5 horas</p><h3 class="post-title">Llora y rasca la puerta cuando salgo</h3></div></div>
+                    <p class="post-body">Adopté a Luna hace un mes. Quiero que se sienta segura cuando me voy a trabajar, pero no sé cómo empezar sin hacerla sentir peor.</p>
+                    <div class="case-footer"><span class="help-count"><i data-lucide="heart"></i> 8 personas ya ayudaron</span><div class="case-actions"><button class="text-action" type="button"><i data-lucide="lightbulb"></i> A mí me funcionó esto</button><button class="professional-action" type="button"><i data-lucide="badge-check"></i> Soy profesional</button></div></div>
+                </article>
+
+                <article class="card sample-card" data-category="urgente" data-sample-id="max-ayuda">
+                    <div class="case-topline"><span class="category-tag tag-urgent"><i data-lucide="life-buoy"></i> Necesito ayuda urgente</span><span class="case-status status-resolved"><span></span> Resuelto <span aria-hidden="true">♥</span></span></div>
+                    <div class="case-heading"><span class="dog-icon dog-icon-green"><i data-lucide="dog"></i></span><div><p class="post-sub">Adulto · Ayer</p><h3 class="post-title">Ya no puedo tenerlo y necesito encontrar ayuda</h3></div></div>
+                    <p class="post-body">Estoy pasando por un cambio familiar difícil y busco una opción responsable para cuidar a Max. No quiero dejarlo desamparado.</p>
+                    <div class="case-footer"><span class="help-count"><i data-lucide="heart"></i> 12 personas ya ayudaron</span><div class="case-actions"><button class="text-action" type="button"><i data-lucide="lightbulb"></i> A mí me funcionó esto</button><button class="professional-action" type="button"><i data-lucide="badge-check"></i> Soy profesional</button></div></div>
+                </article>
+            </section>
+
+            <aside class="sidebar">
+                <div class="rules-icon"><i data-lucide="heart-handshake"></i></div>
+                <p class="eyebrow">Nuestro acuerdo</p>
+                <h2>Un lugar seguro para pedir ayuda.</h2>
+                <ol class="community-rules">
+                    <li><span>01</span><strong>No se juzga.</strong></li>
+                    <li><span>02</span><strong>No se dice “regálalo”.</strong></li>
+                    <li><span>03</span><strong>Se ayuda con respeto.</strong></li>
+                </ol>
+                <p class="rules-note"><i data-lucide="sparkles"></i> Cada familia y cada perro aprende a su ritmo.</p>
+            </aside>
+        </div>
+    </section>
+</main>
 
 <div class="modal" id="modal">
 
-    <div class="modal-contenido">
+    <div class="modal-contenido" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" id="cerrarModal" type="button" aria-label="Cerrar"><i data-lucide="x"></i></button>
+        <p class="eyebrow">Este espacio también es tuyo</p>
+        <h2 id="modal-title">Cuéntanos tu caso</h2>
+        <p class="modal-intro">No tienes que tener todas las respuestas para pedir apoyo.</p>
 
-        <button id="cerrarModal">✖</button>
-        <h2>Nueva publicación</h2>
+        <label for="edad-perro">Mi perro es</label>
+        <select id="edad-perro" required>
+            <option value="Cachorro">Cachorro</option>
+            <option value="Adulto">Adulto</option>
+            <option value="Rescatado">Rescatado</option>
+            <option value="Senior">Senior</option>
+        </select>
 
-        <input
-            type="text"
-            id="titulo"
-            placeholder="Título de la publicación">
+        <label for="titulo">Mi problema es</label>
+        <select id="titulo" required>
+            <option value="Se hace dentro de la casa">Se hace dentro de la casa</option>
+            <option value="Ladra mucho">Ladra mucho</option>
+            <option value="Muerde o es agresivo">Muerde o es agresivo</option>
+            <option value="Ansiedad por separación">Ansiedad por separación</option>
+            <option value="Ya no puedo tenerlo y necesito ayuda">Ya no puedo tenerlo y necesito ayuda</option>
+            <option value="otro">Otro problema</option>
+        </select>
 
-        <input
-            type="file"
-            id="foto"
-            accept="image/*">
+        <div class="custom-problem-field" id="custom-problem-field" hidden>
+            <label for="otro-problema">¿Cuál es el problema?</label>
+            <input id="otro-problema" type="text" maxlength="90" placeholder="Escribe el problema en pocas palabras">
+        </div>
 
-        <textarea
-            id="descripcion"
-            placeholder="Describe lo sucedido"></textarea>
+        <label for="descripcion">¿Qué has intentado ya?</label>
+        <textarea id="descripcion" maxlength="500" placeholder="Cuéntanos un poquito. Te leemos sin juzgar." required></textarea>
 
-        <button
-            class="publicar"
-            id="publicar">
-            Publicar
-        </button>
+        <div class="photo-upload-field">
+            <label for="foto">Adjuntar una foto (opcional)</label>
+            <input id="foto" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
+            <p>Una imagen puede ayudar a entender mejor el caso. Máximo 8 MB.</p>
+            <img id="foto-preview" class="photo-preview" alt="Vista previa de la foto adjunta" hidden>
+        </div>
 
+        <label class="anonymous-option" for="anonimo"><input type="checkbox" id="anonimo" checked><span>Publicar como anónimo</span></label>
+        <button class="primary-button publish-button" id="publicar" type="button"><i data-lucide="send"></i> Publicar mi caso</button>
     </div>
 
 </div>
-<script type="module" src="comunidad.js"></script>
+<script type="module" src="comunidad-interactions.js"></script>
+<script>if (window.lucide) window.lucide.createIcons();</script>
 <script>
     (function(){
         const loader = document.getElementById('site-loader');

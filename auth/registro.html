@@ -16,23 +16,24 @@
         <form>
             <h1>Crear cuenta</h1>
             <p>Utiliza su nombre para registrarse<p>
-            <input type="text" id="nombre" placeholder="Nombre de usuario">
+            <input type="text" id="nombre" placeholder="Nombre de usuario" autocomplete="name" required>
             <br><br>
             <p>Foto de perfil (opcional)</p>
             <input type="file" id="fotoPerfil" accept="image/*">
             <br><br>
             <p>Utiliza su correo para registrarse<p></p>
-            <input type="email" id="correo" placeholder="Correo">
+            <input type="email" id="correo" placeholder="Correo" autocomplete="email" required>
             <br><br>
             <p>Cree su contraseña para registrarse<p></p>
-            <input type="password" id="password" placeholder="Contraseña">
+            <input type="password" id="password" placeholder="Contraseña" autocomplete="new-password" minlength="6" required>
             <br><br>
             <p>Descripción breve</p>
             <textarea id="descripcionPerfil" placeholder="Escribe una breve biografía" rows="4" style="width:100%;border-radius:10px;border:1px solid #ccc;padding:10px;background:rgba(255,255,255,0.9);"></textarea>
             <br><br>
+            <p id="registroMensaje" class="registration-message" role="status" aria-live="polite" hidden></p>
             <button id="registrar" type="button">Registrarme</button>
             <br>
-            <a href="/index.html">Iniciar sesion</a>
+            <a href="../index.html">Iniciar sesión</a>
         </form>
         
     </div>
