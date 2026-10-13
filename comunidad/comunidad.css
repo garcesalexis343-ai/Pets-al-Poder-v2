@@ -437,7 +437,7 @@ button{color:inherit}
 .primary-button:hover{background:var(--orange-dark);transform:translateY(-1px)}
 .primary-button svg{width:17px;height:17px}
 .hero-art{position:absolute;inset:0 0 0 auto;width:40%;display:grid;place-items:center;color:#c8744d}
-.hero-art>svg{position:relative;z-index:1;width:110px;height:110px;stroke-width:1.15;transform:rotate(-14deg)}
+.hero-art>img{position:relative;z-index:1;width:110px;height:110px;stroke-width:1.15;transform:rotate(-14deg)}
 .hero-sun{position:absolute;width:200px;height:200px;top:24px;right:70px;border-radius:50%;background:#f5d9bd;opacity:.56}
 .hero-note{position:absolute;right:38px;bottom:34px;padding:11px 14px;border-radius:12px;background:#fffdf8;color:#805943;font-size:12px;line-height:1.5;font-weight:700;transform:rotate(4deg);box-shadow:0 6px 16px #9d76551c}
 
@@ -618,4 +618,12 @@ a.comment-profile-avatar:hover,a.comment-profile-avatar:focus-visible{outline:2p
 
 @media(max-width:640px){
     .container-comunidad.profile-layout{display:flex;flex-direction:column;gap:14px;margin:16px auto 40px;padding:0 14px}
+}
+
+#huella_logo{
+    position: absolute;
+    width: 30vh;
+    height: 30vh;
+    right:56px;
+    bottom: 45px;
 }
