@@ -176,6 +176,7 @@ header{
     padding:16px;
     box-shadow: 0 6px 18px rgba(16,24,40,0.04);
     height:fit-content;
+    position: relative;
 }
 
 .container-comunidad>*{min-width:0}
@@ -626,4 +627,24 @@ a.comment-profile-avatar:hover,a.comment-profile-avatar:focus-visible{outline:2p
     height: 30vh;
     right:56px;
     bottom: 45px;
+}
+
+#CerrarSesión{
+    position: relative;
+    background-color: #204020;
+    margin-left: 105px;
+    padding: 8px;
+    text-decoration: none;
+    color: #fff;
+    border-radius:15px ;
+}
+
+#CerrarSesión:hover{
+    background-color: #204020;
+    margin-left: 105px;
+    padding: 8px;
+    text-decoration: none;
+    border-radius:15px ;
+  border: 2px solid #44a444;
+
 }
