@@ -82,7 +82,8 @@ body{
     text-align:center;
 }
 
-.registration-message[data-type="success"]{color:#315f32}
+
+registration-message[data-type="success"]{color:#315f32}
 .registration-message[hidden]{display:none}
 .container button:disabled{cursor:wait;opacity:.7}
 
@@ -97,7 +98,7 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0 40px;
+    padding: 20px 50px 30px;
     height: 100%;
 }
 
