@@ -140,7 +140,6 @@ if (veterinaryGrid && nearbyButton && geolocationStatus) {
 const fotos = [
     "imgprincipal.jpg",
     "perros.jpg",
-    "perros1.avif",
     "perros3.avif"
 
 ];
