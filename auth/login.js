@@ -1,10 +1,22 @@
 import { auth } from "../firebase-config.js";
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const loginForm = document.getElementById("loginForm");
 const loginButton = document.getElementById("loginBtn");
 const errorMessage = document.getElementById("loginError");
 
+// NUEVO: comprobar si el usuario ya tiene una sesión activa
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        window.location.replace("inicio.html");
+    }
+});
+
+// TU CÓDIGO ORIGINAL: inicio de sesión
 loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     errorMessage.hidden = true;
@@ -17,6 +29,7 @@ loginForm.addEventListener("submit", async (event) => {
     try {
         await signInWithEmailAndPassword(auth, correo, password);
         window.location.replace("inicio.html");
+
     } catch (error) {
         const messages = {
             "auth/invalid-credential": "El correo o la contraseña no son correctos.",
@@ -24,6 +37,7 @@ loginForm.addEventListener("submit", async (event) => {
             "auth/too-many-requests": "Hubo varios intentos. Espera un momento y prueba de nuevo.",
             "auth/network-request-failed": "No se pudo conectar. Revisa tu conexión a internet."
         };
+
         errorMessage.textContent = messages[error.code] || "No se pudo iniciar sesión. Revisa tus datos e inténtalo de nuevo.";
         errorMessage.hidden = false;
         loginButton.disabled = false;
