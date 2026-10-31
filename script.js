@@ -1,3 +1,4 @@
+
 window.addEventListener("scroll", function() {
 
     const nav = document.querySelector("nav");
@@ -186,22 +187,23 @@ import { auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 onAuthStateChanged(auth, (user) => {
+
+    // NUEVO: proteger la página si no hay sesión activa
+    if (!user) {
+        window.location.replace("index.html");
+        return;
+    }
+
     const el = document.getElementById("userWelcome");
     const perfilBtn = document.getElementById("viewProfileBtn");
+
     if(el){
-        if (user) {
-            const name = user.displayName || user.email;
-            el.textContent = `Bienvenido ${name}`;
-        } else {
-            el.textContent = "";
-        }
+        const name = user.displayName || user.email;
+        el.textContent = `Bienvenido ${name}`;
     }
+
     if(perfilBtn){
-        if(user){
-            perfilBtn.style.display = 'inline-block';
-            perfilBtn.href = `comunidad/perfil.html?uid=${user.uid}`;
-        } else {
-            perfilBtn.style.display = 'none';
-        }
+        perfilBtn.style.display = 'inline-block';
+        perfilBtn.href = `comunidad/perfil.html?uid=${user.uid}`;
     }
 });
