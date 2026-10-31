@@ -1,7 +1,22 @@
 import { auth, db } from "../firebase-config.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import { collection, query, where, getDocs, doc, getDoc, addDoc, Timestamp, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    getDoc,
+    addDoc,
+    Timestamp,
+    deleteDoc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const CLOUD_NAME = "djzjn0e54";
 const UPLOAD_PRESET = "pets_poder";
@@ -21,6 +36,22 @@ const textoDescripcion = document.getElementById('texto-descripcion');
 const guardarDescripcion = document.getElementById('guardar-descripcion');
 const cancelarDescripcion = document.getElementById('cancelar-descripcion');
 let perfilPropioUid = null;
+
+const cerrarSesionBtn = document.getElementById("CerrarSesión");
+
+if (cerrarSesionBtn) {
+    cerrarSesionBtn.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        try {
+            await signOut(auth);
+            window.location.replace("../index.html");
+        } catch (error) {
+            console.error("Error cerrando sesión:", error);
+            mostrarNotificacion("No se pudo cerrar la sesión.", "error");
+        }
+    });
+}
 
 const params = new URLSearchParams(window.location.search);
 const uidParam = params.get('uid');
@@ -69,34 +100,6 @@ cancelarDescripcion.addEventListener('click', () => {
     editarDescripcion.hidden = !perfilPropioUid;
 });
 
-// Cerrar sesión de Firebase
-const cerrarSesionBtn = document.getElementById("CerrarSesión");
-
-if (cerrarSesionBtn) {
-    cerrarSesionBtn.addEventListener("click", async (event) => {
-        event.preventDefault();
-
-        cerrarSesionBtn.disabled = true;
-        cerrarSesionBtn.textContent = "Cerrando sesión...";
-
-        try {
-            await signOut(auth);
-
-            window.location.replace("../index.html");
-
-        } catch (error) {
-            console.error("Error al cerrar sesión:", error);
-
-            mostrarNotificacion(
-                "No se pudo cerrar la sesión. Inténtalo nuevamente.",
-                "error"
-            );
-
-            cerrarSesionBtn.disabled = false;
-            cerrarSesionBtn.textContent = "Cerrar Sesión";
-        }
-    });
-}
 
 guardarDescripcion.addEventListener('click', async () => {
     const user = auth.currentUser;
@@ -422,7 +425,7 @@ if(uidParam){
     console.log('Perfil público para uid:', uidParam);
     
     // Esperar a que Auth cargue para comparar si es nuestro propio perfil
-    auth.onAuthStateChanged((user) => {
+    onAuthStateChanged(auth, (user) => {
         if(user && user.uid === uidParam) {
             // Es nuestro propio perfil, mostrar botón
             console.log('Es nuestro propio perfil, mostrando botón');
