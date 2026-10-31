@@ -1,9 +1,12 @@
 import { auth, db } from "../firebase-config.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 import { collection, query, where, getDocs, doc, getDoc, addDoc, Timestamp, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const CLOUD_NAME = "djzjn0e54";
 const UPLOAD_PRESET = "pets_poder";
-
+const cancelarDescripcion = document.getElementById('cancelar-descripcion');
+let perfilPropioUid = null;
 const feed = document.getElementById('mis-publicaciones');
 const perfilInfo = document.getElementById('perfil-info');
 const modal = document.getElementById("modal");
@@ -65,6 +68,35 @@ cancelarDescripcion.addEventListener('click', () => {
     editorDescripcion.hidden = true;
     editarDescripcion.hidden = !perfilPropioUid;
 });
+
+// Cerrar sesión de Firebase
+const cerrarSesionBtn = document.getElementById("CerrarSesión");
+
+if (cerrarSesionBtn) {
+    cerrarSesionBtn.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        cerrarSesionBtn.disabled = true;
+        cerrarSesionBtn.textContent = "Cerrando sesión...";
+
+        try {
+            await signOut(auth);
+
+            window.location.replace("../index.html");
+
+        } catch (error) {
+            console.error("Error al cerrar sesión:", error);
+
+            mostrarNotificacion(
+                "No se pudo cerrar la sesión. Inténtalo nuevamente.",
+                "error"
+            );
+
+            cerrarSesionBtn.disabled = false;
+            cerrarSesionBtn.textContent = "Cerrar Sesión";
+        }
+    });
+}
 
 guardarDescripcion.addEventListener('click', async () => {
     const user = auth.currentUser;
