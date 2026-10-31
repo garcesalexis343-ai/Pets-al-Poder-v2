@@ -446,10 +446,11 @@ if(uidParam){
     console.log('Perfil propio (sin uid) - botón visible');
     
     auth.onAuthStateChanged(async (user) => {
-        if(!user){
-            window.location.href = '../index.html';
-            return;
-        }
+        
+    if (!user) {
+        window.location.replace("../index.html");
+        return;
+    }
 
         try {
             console.log('Cargando perfil para usuario:', user.uid);
